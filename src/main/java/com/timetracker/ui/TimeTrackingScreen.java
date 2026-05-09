@@ -3,6 +3,7 @@ package com.timetracker.ui;
 import com.timetracker.App;
 import com.timetracker.db.DatabaseManager;
 import com.timetracker.model.HoursRecord;
+import com.timetracker.util.DurationCalculator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +19,6 @@ import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class TimeTrackingScreen {
 
@@ -157,10 +157,7 @@ public class TimeTrackingScreen {
             if (r.getComeOut() == null) {
                 return new SimpleStringProperty("● In progress");
             }
-            long totalMins = (long)(r.getHour() * 60);
-            long h = totalMins / 60;
-            long m = totalMins % 60;
-            return new SimpleStringProperty(String.format("%dh %02dm  (%.2f hrs)", h, m, r.getHour()));
+            return new SimpleStringProperty(DurationCalculator.formatHoursFull(r.getHour()));
         });
         durCol.setCellFactory(col -> new TableCell<>() {
             @Override
@@ -227,19 +224,16 @@ public class TimeTrackingScreen {
     // ── Check Out ──────────────────────────────────────────────────────────────
 
     private void doCheckOut(HoursRecord record) {
-        LocalDateTime now  = LocalDateTime.now();
-        long minutes       = ChronoUnit.MINUTES.between(record.getComeIn(), now);
-        double hours       = Math.round(minutes / 60.0 * 100.0) / 100.0;
-        long h = minutes / 60;
-        long m = minutes % 60;
+        LocalDateTime now = LocalDateTime.now();
+        double hours      = DurationCalculator.calculateHours(record.getComeIn(), now);
 
         record.setComeOut(now);
         record.setHour(hours);
 
         if (DatabaseManager.getInstance().updateHoursRecord(record)) {
             showFeedback(String.format(
-                "✓  Check Out recorded at %s  —  Duration: %dh %02dm (%.2f hrs)",
-                now.format(DT_FMT), h, m, hours), true);
+                "✓  Check Out recorded at %s  —  Duration: %s",
+                now.format(DT_FMT), DurationCalculator.formatHoursFull(hours)), true);
         } else {
             showFeedback("Error: could not save check-out. Please try again.", false);
         }

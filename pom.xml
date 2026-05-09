@@ -50,6 +50,27 @@
             <artifactId>openpdf</artifactId>
             <version>1.3.30</version>
         </dependency>
+
+        <!-- ── Test dependencies ─────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- poi-ooxml is already declared above (compile scope); tests read xlsx via that same dependency -->
     </dependencies>
 
     <build>
@@ -62,6 +83,20 @@
                     <source>21</source>
                     <target>21</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- JUnit 5 runner -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!-- Make JavaFX modules visible to test code -->
+                    <argLine>
+                        --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                    </argLine>
                 </configuration>
             </plugin>
 

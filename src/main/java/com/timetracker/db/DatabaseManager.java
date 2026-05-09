@@ -12,12 +12,20 @@ import java.util.List;
 
 public class DatabaseManager {
 
-    private static final String DB_URL = "jdbc:sqlite:timetracker.db";
     static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static DatabaseManager instance;
+    private final String dbUrl;
 
-    private DatabaseManager() {}
+    /** Production singleton — uses the real on-disk database. */
+    private DatabaseManager() {
+        this.dbUrl = "jdbc:sqlite:timetracker.db";
+    }
+
+    /** Test-only constructor — accepts any JDBC URL (e.g. a temp-file path). */
+    DatabaseManager(String customUrl) {
+        this.dbUrl = customUrl;
+    }
 
     public static DatabaseManager getInstance() {
         if (instance == null) {
@@ -27,7 +35,7 @@ public class DatabaseManager {
     }
 
     private Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(DB_URL);
+        Connection conn = DriverManager.getConnection(dbUrl);
         try (Statement s = conn.createStatement()) {
             s.execute("PRAGMA foreign_keys = ON");
         }

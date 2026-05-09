@@ -9,5 +9,6 @@ D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\model\HoursRecord.jav
 D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\export\PdfExporter.java
 D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\export\ExcelExporter.java
 D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\ui\ReportScreen.java
+D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\util\DurationCalculator.java
 D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\ui\UserManagementScreen.java
 D:\GitHub\TimeTrackerDesktop\src\main\java\com\timetracker\db\DatabaseManager.java
